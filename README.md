@@ -1,3 +1,3 @@
-# CPP Patterns
+# CPP Practice
 
-- Patterns are located in pattern folder
+- Repo for exercising C++ Programming
