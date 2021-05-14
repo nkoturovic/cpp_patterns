@@ -26,4 +26,4 @@ run_conan()
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)  # Includes the contents of the conanbuildinfo.cmake file.
 conan_basic_setup()  # Prepares the CMakeList.txt for Conan.
-add_subdirectory(patterns)
+add_subdirectory(examples)
