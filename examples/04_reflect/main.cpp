@@ -36,7 +36,9 @@ struct Refl {
                 return std::array { ks.c_str()... };
             });
     }
-
+    static std::size_t consteval num_of_fields() { 
+        return keys().size();
+    }
     // template <class Func>
     // constexpr auto values(Func &&f) const noexcept {
     //     return hana::unpack(hana::members(*static_cast<const D*>(this)),
@@ -58,6 +60,13 @@ struct Refl {
             });
     }
 
+    template <class AccVal, class Func>
+    constexpr AccVal accumulate_fields(AccVal&& acc, Func &&f) noexcept {
+        boost::hana::for_each(hana::members(*static_cast<D*>(this)), [&]<typename T>(T&& t) {
+            acc = std::invoke(f, std::forward<AccVal>(acc), std::forward<T>(t));
+        });
+        return std::forward<AccVal>(acc);
+    }
     // What if i want to edit values and not return as array
     // or print them just, and or/combine with keys
     // there is a lot to think about here
@@ -92,6 +101,15 @@ int main()
     for (const auto &[k,v] : vw::zip(ks, vs)) {
         fmt::print("{} : {}\n", k, v);
     }
+
+    auto result = 
+        u.accumulate_fields(std::array<std::pair<unsigned, std::string>, User::num_of_fields()>{},
+            [i = 0u](auto &&acc, auto &&val) mutable {
+                acc[i++] = {i, fmt::format("{}", val)};
+                return std::move(acc);
+            });
+    
+    fmt::print("{}", result);
 
     return 0;
 }
