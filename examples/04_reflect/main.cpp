@@ -9,10 +9,13 @@
 #include <boost/hana.hpp>
 #include <boost/hana/adapt_struct.hpp>
 
+// Reflection implementation using hana library
+//  - Layer on top of hana should be implemented for ease of use
+//  - This layer abstracts using reflection as well as ease of
+//    implementation, which can be done by CRTP deriving from Refl class/
 // Basically should implement all possible access functions
 // for extracting values, also operator[] and much more
 // to be nice set of tools for using in real world
-//
 
 #define REFL BOOST_HANA_ADAPT_STRUCT
 
@@ -34,6 +37,19 @@ struct Refl {
             });
     }
 
+    // template <class Func>
+    // constexpr auto values(Func &&f) const noexcept {
+    //     return hana::unpack(hana::members(*static_cast<const D*>(this)),
+    //         [&]<typename ...Vs>(Vs &&...vs)  {
+    //             constexpr auto fst_t = hana::first(hana::tuple_t<Vs...>);
+    //             if constexpr (std::is_same_v<void, std::invoke_result_t<Func, typename decltype(fst_t)::type>>) {
+    //                 (std::invoke(std::forward<Func>(f), std::forward<Vs>(vs)), ...);
+    //             } else {
+    //                 return std::array { std::invoke(std::forward<Func>(f), std::forward<Vs>(vs)) ... };
+    //             }
+    //         });
+    // }
+
     template <class Func>
     constexpr auto values(Func &&f) const noexcept {
         return hana::unpack(hana::members(*static_cast<const D*>(this)),
@@ -41,6 +57,7 @@ struct Refl {
                 return std::array { std::invoke(f, xs) ... };
             });
     }
+
     // What if i want to edit values and not return as array
     // or print them just, and or/combine with keys
     // there is a lot to think about here
@@ -65,16 +82,16 @@ int main()
     fmt::print("{}\n", User::keys());
     fmt::print("{}\n", u.keys());
 
-    constexpr auto ks = User::keys();
-    auto vs = u.values([](const auto &x) {
+    constexpr std::array ks = User::keys();
+    std::array vs = u.values([](const auto &x) {
         return fmt::format("{}", x);
     });
+
+    fmt::print("{}\n", vs);
 
     for (const auto &[k,v] : vw::zip(ks, vs)) {
         fmt::print("{} : {}\n", k, v);
     }
-
-    // fmt::print("{}\n", u.values());
 
     return 0;
 }
