@@ -109,7 +109,7 @@ int main()
                 return std::move(acc);
             });
     
-    fmt::print("{}", result);
+    fmt::print("{}\n", result);
 
     return 0;
 }
