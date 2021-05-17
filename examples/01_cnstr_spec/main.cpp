@@ -1,10 +1,9 @@
 #include <concepts>
 #include <fmt/format.h>
 
-/* Compile type concept or what is Validator */
 template<typename C>
 concept Constraint = requires(C c) {
-    //c.validate(declval(auto));
+    //c.is_satisfied(declval(auto));
     true;
 };
 
@@ -15,13 +14,13 @@ struct Length {
     T to = std::numeric_limits<T>::max();
 
     template <class S>
-    constexpr bool validate(S const& s) const noexcept 
+    constexpr bool is_satisfied(S const& s) const noexcept 
         requires requires { {s.length() } -> std::convertible_to<T>; } 
     {
         return s.length() >= from && s.length() <= to;
     }
 
-    constexpr bool validate(const char * s) const noexcept {
+    constexpr bool is_satisfied(const char * s) const noexcept {
         auto len = strlen(s);
         return len >= from && len <= to;
     }
@@ -45,9 +44,9 @@ struct S {
 int main() {
     constexpr auto l = Length{.from = 1u, .to = 5u};
     S<l> s{};
-    fmt::print("{}\n", s.constraint.validate(std::string("Hello")));
-    fmt::print("{}\n", s.constraint.validate(std::string_view("Hello world")));
-    fmt::print("{}\n", s.constraint.validate("Hello world"));
+    fmt::print("{}\n", s.constraint.is_satisfied(std::string("Hello")));
+    fmt::print("{}\n", s.constraint.is_satisfied(std::string_view("Hello world")));
+    fmt::print("{}\n", s.constraint.is_satisfied("Hello world"));
     fmt::print("Hello world\n");
     fmt::print("{}\n", describe(l));
 
