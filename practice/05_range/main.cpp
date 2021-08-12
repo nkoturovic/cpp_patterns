@@ -190,7 +190,7 @@ int main()
         fmt::print("{}, {}\n", name, val);
     });
 
-    std::array ks = User::keys_array();
+    constexpr std::array ks = User::keys_array();
     std::array vs = u.values_array(overloaded {
         [](const std::string &s) {
             return s;
@@ -208,6 +208,10 @@ int main()
     //         u.key_value_array([](const auto &x) { return fmt::format("{}", x); })) {
     //     fmt::print("{}, {}\n", k, v);
     // }
+    //
+    //
+    //
+    //
 
     fmt::print("{}\n", u.key_value_tuple());
     fmt::print("{}\n", u.values_tuple());

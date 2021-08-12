@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(CPP_Patterns)
+project(CPP_Practice)
 include(cmake/StandardProjectSettings.cmake)
 include(cmake/PreventInSourceBuilds.cmake)
 
@@ -26,4 +26,4 @@ run_conan()
 
 include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)  # Includes the contents of the conanbuildinfo.cmake file.
 conan_basic_setup()  # Prepares the CMakeList.txt for Conan.
-add_subdirectory(examples)
+add_subdirectory(practice)

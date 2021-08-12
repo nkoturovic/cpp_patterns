@@ -4,6 +4,7 @@ out
 .idea
 .vscode
 .vs
+.cache
 compile_commands.json
 *build*
 CMakeLists.txt.user
