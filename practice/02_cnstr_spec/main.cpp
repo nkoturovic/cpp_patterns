@@ -27,6 +27,10 @@ struct Length {
     }
 };
 
+
+// template <std::unsigned_integral T>
+// Length(T t1, T t2) -> Length<T>;
+
 enum class Lang { EN_US, RS_LATIN, RS_CYRILIC };
 
 template <Lang lang>
@@ -38,20 +42,14 @@ template <auto lang = Lang::EN_US>
 std::string describe(Constraint auto const& c) {
     return DescribeConstraint<lang>::describe(c);
 }
- 
-template <Constraint auto c>
-struct S { 
-    static constexpr Constraint auto constraint = c;
-};
-
 int main() {
-    S<Length{.from=1u, .to=5u}> s{};
-    fmt::print("{}\n", s.constraint.is_satisfied(std::string("Hello")));
-    fmt::print("{}\n", s.constraint.is_satisfied(std::string_view("Hello world")));
-    fmt::print("{}\n", s.constraint.is_satisfied("Hello world"));
-    fmt::print("{}\n", describe(s.constraint));
-    fmt::print("{}\n", describe<Lang::RS_LATIN>(s.constraint));
-    fmt::print("{}\n", describe<Lang::RS_CYRILIC>(s.constraint));
+    constexpr auto ctr = Length{.from=1u, .to=5u};
+    fmt::print("{}\n", ctr.is_satisfied(std::string("Hello")));
+    fmt::print("{}\n", ctr.is_satisfied(std::string_view("Hello world")));
+    fmt::print("{}\n", ctr.is_satisfied("Hello world"));
+    fmt::print("{}\n", describe(ctr));
+    fmt::print("{}\n", describe<Lang::RS_LATIN>(ctr));
+    fmt::print("{}\n", describe<Lang::RS_CYRILIC>(ctr));
     return 0;
 }
 
