@@ -72,6 +72,9 @@ struct Refl {
     // there is a lot to think about here
 };
 
+// TODO: It would be probably better to use specialization
+// of REFL template, to make it non intrusive and more flexible
+// also it would give us separation of REFL and non REFL thingies
 struct User final : Refl<User> {
     uint64_t id;
     std::string firstname;
